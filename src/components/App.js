@@ -8,16 +8,16 @@ const UserListApp = () => {
   const fetchUsers = async () => {
     setLoading(true);
     setError('');
-    
+
     try {
-      const response = await fetch('https://reqres.in/api/users');
-      
+      const response = await fetch('https://reqres.in/api/users?page=1'); // ✅ Corrected API
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
+
       if (data.data && Array.isArray(data.data) && data.data.length > 0) {
         setUsers(data.data);
       } else {
@@ -25,52 +25,55 @@ const UserListApp = () => {
         setError('No data found');
       }
     } catch (err) {
-      // Use mock data for demonstration when API fails due to CORS
+      // ✅ Graceful fallback with mock data
+      console.error('Fetch failed:', err.message);
+      setError('API failed, showing mock data');
+
       const mockUsers = [
         {
           id: 1,
-          email: "george.bluth@reqres.in",
-          first_name: "George",
-          last_name: "Bluth",
-          avatar: "https://reqres.in/img/faces/1-image.jpg"
+          email: 'george.bluth@reqres.in',
+          first_name: 'George',
+          last_name: 'Bluth',
+          avatar: 'https://reqres.in/img/faces/1-image.jpg',
         },
         {
           id: 2,
-          email: "janet.weaver@reqres.in",
-          first_name: "Janet",
-          last_name: "Weaver",
-          avatar: "https://reqres.in/img/faces/2-image.jpg"
+          email: 'janet.weaver@reqres.in',
+          first_name: 'Janet',
+          last_name: 'Weaver',
+          avatar: 'https://reqres.in/img/faces/2-image.jpg',
         },
         {
           id: 3,
-          email: "emma.wong@reqres.in",
-          first_name: "Emma",
-          last_name: "Wong",
-          avatar: "https://reqres.in/img/faces/3-image.jpg"
+          email: 'emma.wong@reqres.in',
+          first_name: 'Emma',
+          last_name: 'Wong',
+          avatar: 'https://reqres.in/img/faces/3-image.jpg',
         },
         {
           id: 4,
-          email: "eve.holt@reqres.in",
-          first_name: "Eve",
-          last_name: "Holt",
-          avatar: "https://reqres.in/img/faces/4-image.jpg"
+          email: 'eve.holt@reqres.in',
+          first_name: 'Eve',
+          last_name: 'Holt',
+          avatar: 'https://reqres.in/img/faces/4-image.jpg',
         },
         {
           id: 5,
-          email: "charles.morris@reqres.in",
-          first_name: "Charles",
-          last_name: "Morris",
-          avatar: "https://reqres.in/img/faces/5-image.jpg"
+          email: 'charles.morris@reqres.in',
+          first_name: 'Charles',
+          last_name: 'Morris',
+          avatar: 'https://reqres.in/img/faces/5-image.jpg',
         },
         {
           id: 6,
-          email: "tracey.ramos@reqres.in",
-          first_name: "Tracey",
-          last_name: "Ramos",
-          avatar: "https://reqres.in/img/faces/6-image.jpg"
-        }
+          email: 'tracey.ramos@reqres.in',
+          first_name: 'Tracey',
+          last_name: 'Ramos',
+          avatar: 'https://reqres.in/img/faces/6-image.jpg',
+        },
       ];
-      
+
       setUsers(mockUsers);
     } finally {
       setLoading(false);
@@ -81,9 +84,9 @@ const UserListApp = () => {
     <div className="p-8 max-w-6xl mx-auto">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-4 text-blue-600">Blue Whales</h1>
-        <button 
+        <button
           onClick={fetchUsers}
-          className="btn bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded transition-colors duration-200"
+          className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded transition-colors duration-200"
           disabled={loading}
         >
           {loading ? 'Loading...' : 'Get User List'}
@@ -130,7 +133,10 @@ const UserListApp = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {users.map((user, index) => (
-                <tr key={user.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                <tr
+                  key={user.id}
+                  className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                >
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {user.first_name}
                   </td>
@@ -141,8 +147,8 @@ const UserListApp = () => {
                     {user.email}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <img 
-                      src={user.avatar} 
+                    <img
+                      src={user.avatar}
                       alt={`${user.first_name} ${user.last_name}`}
                       className="h-12 w-12 rounded-full object-cover"
                     />
